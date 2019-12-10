@@ -19,4 +19,15 @@ public:
 
 };
 
+enum class PackageQueueType {
+    FIFO;
+    LIFO;
+};
+
+class IPackageStockPile {
+    virtual void push(Package&&) const = 0
+
+};
+
+
 #endif //NETWORK_SIM_PACKAGE_HPP
