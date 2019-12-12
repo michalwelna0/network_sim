@@ -14,6 +14,7 @@ private:
 
 public:
     Package() {};
+    Package(const Package&) = default;
     Package(const Package&&);
     const ElementID get_id() {return id;}
     Package& operator=(Package&& other) {

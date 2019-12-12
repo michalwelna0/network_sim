@@ -11,15 +11,16 @@
 
 enum class PackageQueueType { FIFO, LIFO };
 
-std::string getFifo_or_Lifo();
+
 
 
 class IPackageStockpile{
 
 public:
-    virtual void const push(Package&&) = 0;
+    virtual void const push(Package&& pack) = 0;
     virtual bool const empty() = 0;
     virtual std::size_t const size() = 0;
+    using citerator = std::deque<Package>::const_iterator;
 
 };
 
@@ -35,11 +36,12 @@ class PackageQueue:IPackageQueue{
 
 public:
     PackageQueue(PackageQueueType queue_type_): queue_type(queue_type_) {}
-    void const push(Package&&) override;
+    void const push(Package&& pack) override;
     bool const empty() override;
     std::size_t const size() override;
     Package pop() override;
     PackageQueueType const get_queue_type() override;
+    std::string getFifo_or_Lifo(PackageQueueType type);
 
 private:
     PackageQueueType queue_type;
