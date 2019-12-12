@@ -3,6 +3,7 @@
 
 std::set<ElementID> Package::assigned_IDs={};
 std::set<ElementID> Package::freed_IDs={};
+
 ElementID Package::assign_id() {
 
     ElementID id_to_assign = 0;
@@ -22,7 +23,7 @@ ElementID Package::assign_id() {
     }
     else{
 
-        id_to_assign = *(assigned_IDs.begin());
+        id_to_assign = *(freed_IDs.begin());
 
     }
     return id_to_assign;
