@@ -2,13 +2,12 @@
 
 
 
-std::string PackageQueue::getFifo_or_Lifo (PackageQueueType type){
+std::string PackageQueue::getFIFO_or_LIFO (PackageQueueType type){
     if (type==PackageQueueType ::FIFO){
         return "FIFO";
     }else return "LIFO";
 
 }
-
 
 
 const PackageQueueType PackageQueue::get_queue_type() {
@@ -17,7 +16,7 @@ const PackageQueueType PackageQueue::get_queue_type() {
 
 Package PackageQueue :: pop() {
 
-    std::string type = getFifo_or_Lifo(PackageQueueType::FIFO);
+    std::string type = getFIFO_or_LIFO(PackageQueueType::FIFO);
     if (type == "FIFO") {
 
         Package pack = package_queue.front();
