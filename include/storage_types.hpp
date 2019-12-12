@@ -41,7 +41,7 @@ public:
     std::size_t const size() override;
     Package pop() override;
     PackageQueueType const get_queue_type() override;
-    std::string getFifo_or_Lifo(PackageQueueType type);
+    std::string getFIFO_or_LIFO(PackageQueueType type);
 
 private:
     PackageQueueType queue_type;

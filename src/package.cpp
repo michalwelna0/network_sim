@@ -24,6 +24,7 @@ ElementID Package::assign_id() {
     else{
 
         id_to_assign = *(freed_IDs.begin());
+        freed_IDs.erase(id_to_assign);
 
     }
     return id_to_assign;
