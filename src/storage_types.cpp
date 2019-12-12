@@ -10,8 +10,9 @@ std::string PackageQueue::getFifo_or_Lifo (PackageQueueType type){
 }
 
 
+
 const PackageQueueType PackageQueue::get_queue_type() {
-    return queue_type;
+   return queue_type;
 }
 
 Package PackageQueue :: pop() {

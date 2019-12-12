@@ -4,23 +4,21 @@
 #include <cstdlib>
 #include <set>
 
-static std::set<ElementID> assigned_IDs;
-static std::set<ElementID> freed_IDs;
-
 class Package{
 
 private:
     ElementID id;
+    static std::set<ElementID> assigned_IDs;
+    static std::set<ElementID> freed_IDs;
+    ElementID assign_id();
 
 public:
-    Package() {};
+    Package() {id = assign_id(); assigned_IDs.emplace(id);};
     Package(const Package&) = default;
-    Package(const Package&&);
+    ~Package() {assigned_IDs.erase(id); freed_IDs.emplace(id);};
+    Package(Package&& package) : id(std::move(package.id)) {};
     const ElementID get_id() {return id;}
-    Package& operator=(Package&& other) {
-        id = std::move(other.get_id());
-        return *this;
-    };
+    Package& operator=(Package&& package) {id = std::move(package.id); return *this;};
 
 };
 
