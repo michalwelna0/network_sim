@@ -16,7 +16,10 @@ public:
     Package() {};
     Package(const Package&&);
     const ElementID get_id() {return id;}
-    Package& operator=(Package&&);
+    Package& operator=(Package&& other) {
+        id = std::move(other.get_id());
+        return *this;
+    };
 
 };
 
