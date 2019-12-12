@@ -3,8 +3,13 @@
 
 #include "types.hpp"
 #include "package.hpp"
+#include <string>
+#include <iostream>
 
 enum class PackageQueueType { FIFO, LIFO };
+
+std::string getFifo_or_Lifo();
+
 
 class IPackageStockpile{
 
