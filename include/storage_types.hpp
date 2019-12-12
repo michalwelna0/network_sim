@@ -3,30 +3,40 @@
 
 #include "types.hpp"
 #include "package.hpp"
+#include <deque>
 
 enum class PackageQueueType { FIFO, LIFO };
 
 class IPackageStockpile{
 
 public:
-    virtual const void push(Package&&) = 0;
-    virtual const bool empty() = 0;
-    virtual const std::size_t size() = 0;
+    virtual void const push(Package&&) = 0;
+    virtual bool const empty() = 0;
+    virtual std::size_t const size() = 0;
 
 };
 
-class IPackageQueue{
+class IPackageQueue:IPackageStockpile{
 
 public:
     virtual Package pop() = 0;
-    virtual const PackageQueueType get_queue_type() = 0;
+    virtual PackageQueueType const  get_queue_type() = 0;
 
 };
 
-class PackageQueue{
+class PackageQueue:IPackageQueue{
 
 public:
-    PackageQueueType PackageQueue;
+    PackageQueue(PackageQueueType queue_type_): queue_type(queue_type_) {}
+    void const push(Package&&) override;
+    bool const empty() override;
+    std::size_t const size() override;
+    Package pop() override;
+    PackageQueueType const get_queue_type() override;
+
+private:
+    PackageQueueType queue_type;
+    std::deque<Package> package_queue;
 
 };
 
