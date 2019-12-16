@@ -18,11 +18,11 @@ set(SOURCE_FILES_TESTS
 add_executable(network_sim_test ${SOURCE_FILES_TESTS} ${SOURCE_FILES} test/main_test.cpp)
 
 target_include_directories(network_sim_test PUBLIC
-        googletest-master/googlemock/include
-        googletest-master/googletest/include
+        ../googletest-master/googlemock/include
+        ../googletest-master/googletest/include
         )
 
-add_subdirectory(googletest-master googletest-master)
+add_subdirectory(../googletest-master googletest-master)
 
 target_link_libraries(network_sim_test gmock)
 
