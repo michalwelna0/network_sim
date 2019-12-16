@@ -20,7 +20,6 @@ public:
     virtual void const push(Package&& pack) = 0;
     virtual bool const empty() = 0;
     virtual std::size_t const size() = 0;
-    using citerator = std::deque<Package>::const_iterator;
 
 };
 
@@ -42,6 +41,13 @@ public:
     Package pop() override;
     PackageQueueType const get_queue_type() override;
     std::string getFIFO_or_LIFO(PackageQueueType type);
+    using citerator = std::deque<Package>::const_iterator;
+    using iterator = std::deque<Package>::iterator;
+    citerator cbegin() const {return package_queue.cbegin();}
+    citerator cend() const {return package_queue.cend();}
+    iterator begin() {return package_queue.begin();}
+    iterator end()  {return package_queue.end();}
+
 
 private:
     PackageQueueType queue_type;

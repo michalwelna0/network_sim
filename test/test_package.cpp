@@ -32,7 +32,7 @@ TEST(PackageCopyingConstructorTest, changePackageId){
     EXPECT_EQ(1, pack2.get_id());
 }
 
-TEST(PackageOperatorTest, chaningPackageId){
+TEST(PackageOperatorTest, changingPackageId){
     Package pack1;
     Package pack2;
     pack2.operator=(static_cast<Package&&>(pack1));

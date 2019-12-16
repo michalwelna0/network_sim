@@ -18,7 +18,7 @@ public:
     ~Package() {assigned_IDs.erase(id); freed_IDs.emplace(id);};
     Package(Package&& package) : id(std::move(package.id)) {};
     const ElementID get_id() {return id;}
-    Package& operator=(Package&& package) {id = std::move(package.id); return *this;};
+    Package& operator=(Package&& package) {id = std::move(package.id);  return *this;};
 
 };
 
