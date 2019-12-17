@@ -11,7 +11,7 @@ std::string PackageQueue::getFIFO_or_LIFO (PackageQueueType type){
 }
 
 
-const PackageQueueType PackageQueue::get_queue_type() {
+PackageQueueType PackageQueue::get_queue_type() const {
    return queue_type;
 }
 
@@ -35,10 +35,10 @@ const void PackageQueue::push(Package && pack) {
     package_queue.push_back(std::move(pack));
 }
 
-const bool PackageQueue::empty() {
+bool PackageQueue::empty() const {
     return package_queue.empty();
 }
 
-const size_t PackageQueue::size() {
+ size_t PackageQueue::size() const {
     return package_queue.size();
 }

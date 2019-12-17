@@ -18,8 +18,8 @@ class IPackageStockpile{
 
 public:
     virtual void const push(Package&& pack) = 0;
-    virtual bool const empty() = 0;
-    virtual std::size_t const size() = 0;
+    virtual bool empty()const = 0;
+    virtual std::size_t  size() const = 0;
 
 };
 
@@ -27,7 +27,7 @@ class IPackageQueue:IPackageStockpile{
 
 public:
     virtual Package pop() = 0;
-    virtual PackageQueueType const  get_queue_type() = 0;
+    virtual PackageQueueType  get_queue_type() const = 0;
 
 };
 
@@ -36,10 +36,10 @@ class PackageQueue:IPackageQueue{
 public:
     PackageQueue(PackageQueueType queue_type_): queue_type(queue_type_) {}
     void const push(Package&& pack) override;
-    bool const empty() override;
-    std::size_t const size() override;
+    bool empty() const  override;
+    std::size_t  size()const override;
     Package pop() override;
-    PackageQueueType const get_queue_type() override;
+    PackageQueueType get_queue_type()const override;
     std::string getFIFO_or_LIFO(PackageQueueType type);
     using citerator = std::deque<Package>::const_iterator;
     using iterator = std::deque<Package>::iterator;
