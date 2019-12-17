@@ -1,5 +1,6 @@
 #ifndef NETWORK_SIM_FACTORY_HPP
 #define NETWORK_SIM_FACTORY_HPP
+#include "types.hpp"
 
 class NodeCollection{};
 class Factory{};

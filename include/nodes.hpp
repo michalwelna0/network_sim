@@ -1,6 +1,6 @@
 #ifndef NETWORK_SIM_NODES_HPP
 #define NETWORK_SIM_NODES_HPP
-
+#include "types.hpp"
 enum class ReceiverType{};
 class IPackageReceiver{};
 class Storehouse{};
