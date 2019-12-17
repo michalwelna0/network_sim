@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCE_FILES
         src/package.cpp
-        src/storage_types.cpp)
+        src/storage_types.cpp
+        src/nodes.cpp)
 
 add_executable(network_sim_debug ${SOURCE_FILES} main.cpp )
 
@@ -13,7 +14,8 @@ add_executable(network_sim_debug ${SOURCE_FILES} main.cpp )
 
 set(SOURCE_FILES_TESTS
         test/test_package.cpp
-        test/test_storage_types.cpp)
+        test/test_storage_types.cpp
+        test/test_nodes.cpp)
 
 add_executable(network_sim_test ${SOURCE_FILES_TESTS} ${SOURCE_FILES} test/main_test.cpp)
 
