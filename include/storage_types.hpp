@@ -20,10 +20,15 @@ public:
     virtual void const push(Package&& pack) = 0;
     virtual bool empty()const = 0;
     virtual std::size_t  size() const = 0;
+    using citerator = std::deque<Package>::const_iterator;
+    virtual citerator cbegin () const = 0;
+    virtual citerator cend() const = 0;
+    virtual citerator begin() const = 0;
+    virtual citerator end () const = 0;
 
 };
 
-class IPackageQueue:IPackageStockpile{
+class IPackageQueue: public IPackageStockpile{
 
 public:
     virtual Package pop() = 0;
@@ -31,7 +36,7 @@ public:
 
 };
 
-class PackageQueue:IPackageQueue{
+class PackageQueue: public IPackageQueue{
 
 public:
     PackageQueue(PackageQueueType queue_type_): queue_type(queue_type_) {}
@@ -41,12 +46,11 @@ public:
     Package pop() override;
     PackageQueueType get_queue_type()const override;
     std::string getFIFO_or_LIFO(PackageQueueType type);
-    using citerator = std::deque<Package>::const_iterator;
-    using iterator = std::deque<Package>::iterator;
-    citerator cbegin() const {return package_queue.cbegin();}
-    citerator cend() const {return package_queue.cend();}
-    iterator begin() {return package_queue.begin();}
-    iterator end()  {return package_queue.end();}
+    citerator cbegin() const override {return package_queue.cbegin();}
+    citerator cend() const override  {return package_queue.cend();}
+    citerator begin() const override {return package_queue.begin();}
+    citerator end() const override {return package_queue.end();}
+
 
 
 private:
