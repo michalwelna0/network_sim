@@ -27,15 +27,17 @@ TEST(PackageConctructorTest, afterErasingOnePackage){
 
 TEST(PackageCopyingConstructorTest, changePackageId){
     Package pack1;
-    Package pack2(static_cast<Package&&>(pack1));
-    EXPECT_TRUE(1 != pack1.get_id());
+    Package pack2(std::move(pack1));
+    Package pack3_1;
     EXPECT_EQ(1, pack2.get_id());
+    EXPECT_EQ(2, pack3_1.get_id());
 }
 
 TEST(PackageOperatorTest, changingPackageId){
     Package pack1;
     Package pack2;
-    pack2.operator=(static_cast<Package&&>(pack1));
-    EXPECT_TRUE(1 != pack1.get_id());
+    pack2 = (std::move(pack1));
+    Package pack3_1;
     EXPECT_EQ(1, pack2.get_id());
+    EXPECT_EQ(2, pack3_1.get_id());
 }
