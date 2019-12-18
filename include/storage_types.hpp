@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <deque>
+#include <list>
 
 
 enum class PackageQueueType { FIFO, LIFO };
@@ -20,7 +21,7 @@ public:
     virtual void const push(Package&& pack) = 0;
     virtual bool empty()const = 0;
     virtual std::size_t  size() const = 0;
-    using citerator = std::deque<Package>::const_iterator;
+    using citerator = std::list<Package>::const_iterator;
     virtual citerator cbegin () const = 0;
     virtual citerator cend() const = 0;
     virtual citerator begin() const = 0;
@@ -55,7 +56,7 @@ public:
 
 private:
     PackageQueueType queue_type;
-    std::deque<Package> package_queue;
+    std::list<Package> package_queue;
 
 };
 
