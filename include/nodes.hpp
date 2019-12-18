@@ -4,11 +4,14 @@
 #include "package.hpp"
 #include "storage_types.hpp"
 #include <memory>
+#include <map>
 
 
 
 enum class ReceiverType{
-    Male, Female
+    Ramp = 1,
+    Worker = 2,
+    Storehouse = 3
 };
 
 
@@ -35,9 +38,54 @@ private:
 };
 
 
-class ReceiverPreferences{};
-class PackageSender{};
-class Ramp{};
+class ReceiverPreferences{
+
+public:
+    using preferences_t = std::map<IPackageReceiver*, double>;
+    using const_iterator = preferences_t::const_iterator;
+    using iterator = preferences_t::iterator;
+    void add_receiver(IPackageReceiver* r);
+    void remove_receiver(IPackageReceiver* r);
+    void choose_receiver(IPackageReceiver* r);
+    const_iterator cbegin() const {return preferences_.cbegin();}
+    const_iterator cend() const {return preferences_.cend();}
+    iterator begin() {return preferences_.begin();}
+    iterator end() {return preferences_.end();}
+
+private:
+    preferences_t preferences_;
+
+};
+
+
+class PackageSender{
+
+public:
+    void send_package();
+    std::pair<Package, bool> get_sending_buffer() const;
+
+protected:
+    void push_package(Package);
+
+private:
+    ReceiverPreferences receiver_preferences_;
+
+};
+
+
+class Ramp{
+
+public:
+    Ramp(ElementID id, TimeOffset di) : id_(id), di_(di) {};
+    void deliver_goods(Time t);
+    TimeOffset get_delivery_interval() const { return di_; };
+    ElementID get_id() const { return id_; }
+
+private:
+    ElementID id_;
+    TimeOffset di_;
+
+};
 
 
 class Worker : public IPackageReceiver{
