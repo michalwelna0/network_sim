@@ -4,5 +4,5 @@
 using ElementID = unsigned int;
 using Time = int;
 using TimeOffset = int;
-using ProbabilityGenerator = float;
+using ProbabilityGenerator = double;
 #endif //NETWORK_SIM_TYPES_HPP

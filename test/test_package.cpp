@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "../include/package.hpp"
+#include "package.hpp"
 
 TEST(PackageConctructorTest, creatingFirstObject){
     Package pack;

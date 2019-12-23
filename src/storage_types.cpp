@@ -1,4 +1,4 @@
-#include "../include/storage_types.hpp"
+#include "storage_types.hpp"
 
 
 
@@ -31,7 +31,7 @@ Package PackageQueue :: pop() {
 
 }
 
-const void PackageQueue::push(Package && pack) {
+void PackageQueue::push(Package && pack) {
     package_queue.push_back(std::move(pack));
 }
 

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "../include/storage_types.hpp"
+#include "storage_types.hpp"
 
 TEST(QueueConstructorTest, creatingQueue){
     PackageQueue Fifo_que(PackageQueueType::FIFO);

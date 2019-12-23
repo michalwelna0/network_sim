@@ -8,17 +8,17 @@
 
 
 
-enum class ReceiverType{
+/*enum class ReceiverType{
     Ramp = 1,
     Worker = 2,
     Storehouse = 3
 };
-
+*/
 
 class IPackageReceiver{
 public:
     virtual void receive_package(Package&& p) = 0;
-    virtual ReceiverType get_receiver_type() const = 0;
+    //virtual ReceiverType get_receiver_type() const = 0;
     virtual ElementID get_id() const =0;
 
 
@@ -29,7 +29,7 @@ class Storehouse : public IPackageReceiver{
 public:
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d): id_(id), d_(std::move(d)) {}
     void receive_package (Package&& p) override;
-    ReceiverType get_receiver_type() const override;
+    //ReceiverType get_receiver_type() const override;
     ElementID get_id() const override;
 private:
     ElementID id_;
@@ -46,7 +46,7 @@ public:
     using iterator = preferences_t::iterator;
     void add_receiver(IPackageReceiver* r);
     void remove_receiver(IPackageReceiver* r);
-    void choose_receiver(IPackageReceiver* r);
+    IPackageReceiver* choose_receiver();
     const_iterator cbegin() const {return preferences_.cbegin();}
     const_iterator cend() const {return preferences_.cend();}
     iterator begin() {return preferences_.begin();}
@@ -65,7 +65,7 @@ public:
     std::pair<Package, bool> get_sending_buffer() const;
 
 protected:
-    void push_package(Package);
+    void push_package(Package&&);
 
 private:
     ReceiverPreferences receiver_preferences_;
@@ -91,11 +91,11 @@ private:
 class Worker : public IPackageReceiver{
 public:
     Worker(ElementID id, TimeOffset pd, std::unique_ptr<PackageQueue> q) : id_(id), pd_(pd), q_(std::move(q)) {}
-    void do_work();
+    void do_work(Time t);
     TimeOffset get_processing_duration() const;
     Time get_package_processing_start_time() const;
     void receive_package (Package&& p) override;
-    ReceiverType get_receiver_type() const override;
+    //ReceiverType get_receiver_type() const override;
     ElementID get_id() const override;
 
 private:

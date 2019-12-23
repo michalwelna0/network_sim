@@ -18,7 +18,7 @@ enum class PackageQueueType { FIFO, LIFO };
 class IPackageStockpile{
 
 public:
-    virtual void const push(Package&& pack) = 0;
+    virtual void push(Package&& pack) = 0;
     virtual bool empty()const = 0;
     virtual std::size_t  size() const = 0;
     using citerator = std::list<Package>::const_iterator;
@@ -41,7 +41,7 @@ class PackageQueue: public IPackageQueue{
 
 public:
     PackageQueue(PackageQueueType queue_type_): queue_type(queue_type_) {}
-    void const push(Package&& pack) override;
+    void push(Package&& pack) override;
     bool empty() const  override;
     std::size_t  size()const override;
     Package pop() override;
