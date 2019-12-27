@@ -5,6 +5,7 @@
 #include "storage_types.hpp"
 #include <memory>
 #include <map>
+#include <functional>
 
 
 
@@ -30,7 +31,7 @@ public:
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d): id_(id), d_(std::move(d)) {}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
-    ElementID get_id() const override;
+    ElementID get_id() const override {return id_;}
 private:
     ElementID id_;
     std::unique_ptr<IPackageStockpile> d_;
@@ -41,6 +42,7 @@ private:
 class ReceiverPreferences{
 
 public:
+    //ReceiverPreferences(std::function<ProbabilityGenerator(void)> ptr) do zrobienia nie wiem o co chodzi diablowi
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
     using iterator = preferences_t::iterator;
@@ -63,17 +65,17 @@ class PackageSender{
 public:
     void send_package();
     std::pair<Package, bool> get_sending_buffer() const;
+    ReceiverPreferences receiver_preferences_;
 
 protected:
     void push_package(Package&&);
 
-private:
-    ReceiverPreferences receiver_preferences_;
+
 
 };
 
 
-class Ramp{
+class Ramp : public PackageSender{
 
 public:
     Ramp(ElementID id, TimeOffset di) : id_(id), di_(di) {};
@@ -88,20 +90,21 @@ private:
 };
 
 
-class Worker : public IPackageReceiver{
+class Worker : public PackageSender, IPackageReceiver{
 public:
     Worker(ElementID id, TimeOffset pd, std::unique_ptr<PackageQueue> q) : id_(id), pd_(pd), q_(std::move(q)) {}
     void do_work(Time t);
-    TimeOffset get_processing_duration() const;
-    Time get_package_processing_start_time() const;
+    TimeOffset get_processing_duration() const {return pd_;}
+    Time get_package_processing_start_time() const {return t_;}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
-    ElementID get_id() const override;
+    ElementID get_id() const override {return id_;}
 
 private:
     ElementID id_;
     TimeOffset pd_;
     std::unique_ptr<PackageQueue> q_;
+    Time t_;
 
 
 };
