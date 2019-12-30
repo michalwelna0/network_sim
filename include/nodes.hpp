@@ -55,7 +55,7 @@ public:
     iterator end() {return preferences_.end();}
 
 private:
-    preferences_t preferences_;
+    static preferences_t preferences_;
 
 };
 
