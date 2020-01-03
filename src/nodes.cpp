@@ -68,3 +68,17 @@ void Ramp::deliver_goods(Time t) {
     }
 
 }
+
+void Worker::do_work(Time t) {
+    if((t - t_)% pd_ == 0){
+        if(workerBufor.second){
+            push_package(std::move(workerBufor.first));
+            workerBufor.second = false;
+        }
+
+        workerBufor = std::make_pair(q_->pop(), true);
+        send_package();
+    }
+
+    t_ = t;
+}

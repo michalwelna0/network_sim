@@ -5,10 +5,9 @@
 #include <ctime>
 #include <cstdlib>
 
-std::random_device rd;
-std::mt19937 rng(rd());
 
-double probability_generator() {return std::generate_canonical<double, 10>(rng);}
+
+double probability_generator();
 
 
 #endif //NETWORK_SIM_HELPERS_HPP
