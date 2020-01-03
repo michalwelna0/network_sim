@@ -3,6 +3,7 @@
 #include "types.hpp"
 #include "package.hpp"
 #include "storage_types.hpp"
+#include "helpers.hpp"
 #include <memory>
 #include <map>
 #include <functional>
@@ -42,33 +43,39 @@ private:
 class ReceiverPreferences{
 
 public:
-    //ReceiverPreferences(std::function<ProbabilityGenerator(void)> ptr) do zrobienia nie wiem o co chodzi diablowi
+    ReceiverPreferences(ProbabilityGenerator pg = probability_generator) : rng_(std::move(pg)) {}
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
-    using iterator = preferences_t::iterator;
+
+
     void add_receiver(IPackageReceiver* r);
     void remove_receiver(IPackageReceiver* r);
     IPackageReceiver* choose_receiver();
+
     const_iterator cbegin() const {return preferences_.cbegin();}
     const_iterator cend() const {return preferences_.cend();}
-    iterator begin() {return preferences_.begin();}
-    iterator end() {return preferences_.end();}
+
 
 private:
-    static preferences_t preferences_;
+    preferences_t preferences_;
+    ProbabilityGenerator rng_;
+    void scale_probability();
 
 };
 
 
 class PackageSender{
 
+private:
+    std::pair<Package,bool> PackSenderBufor;
+
 public:
     void send_package();
-    std::pair<Package, bool> get_sending_buffer() const;
+    std::pair<Package, bool> get_sending_buffer() const {return PackSenderBufor;}
     ReceiverPreferences receiver_preferences_;
 
 protected:
-    void push_package(Package&&);
+    void push_package(Package&& pack);
 
 
 
@@ -104,6 +111,7 @@ private:
     ElementID id_;
     TimeOffset pd_;
     std::unique_ptr<PackageQueue> q_;
+    std::pair<Package,bool> workerBufor;
     Time t_;
 
 
