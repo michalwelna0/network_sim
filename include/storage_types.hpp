@@ -26,7 +26,7 @@ public:
     virtual citerator cend() const = 0;
     virtual citerator begin() const = 0;
     virtual citerator end () const = 0;
-
+    virtual ~IPackageStockpile() {};
 };
 
 class IPackageQueue: public IPackageStockpile{

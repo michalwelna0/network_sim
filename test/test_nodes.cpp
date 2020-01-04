@@ -91,3 +91,137 @@ TEST(RampTest1, isBuforNotEmptyDoesItFullCorrectly){
     EXPECT_EQ(false,r2.get_sending_buffer().second);
 
 }
+
+TEST(ReceiverPreferences, scaling_probability_while_adding_receivers){
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::LIFO);
+    PackageQueue q3(PackageQueueType::FIFO);
+    PackageQueue q4(PackageQueueType::LIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+
+    Storehouse s1(1,std::move(ptr3));
+    Storehouse s2(2, std::move(ptr4));
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 2, std::move(ptr2));
+
+    ReceiverPreferences rev;
+    rev.add_receiver(&s1);
+    EXPECT_EQ(rev.cbegin()->second,1);
+
+    rev.add_receiver(&s2);
+    std::vector<double> vec;
+    for(auto i = rev.cbegin(); i != rev.cend(); i++){
+        vec.push_back(i->second);
+    }
+    EXPECT_EQ(vec[0],0.5);
+    EXPECT_EQ(vec[1],0.5);
+    vec.clear();
+
+    rev.add_receiver(&w1);
+    rev.add_receiver(&w2);
+
+    for(auto i = rev.cbegin(); i != rev.cend(); i++){
+        vec.push_back(i->second);
+    }
+    EXPECT_EQ(vec[0],0.25);
+    EXPECT_EQ(vec[1],0.25);
+    EXPECT_EQ(vec[2],0.25);
+    EXPECT_EQ(vec[3],0.25);
+}
+
+TEST(ReceiverPreferences, scaling_probability_while_erasing_receivers){
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::LIFO);
+    PackageQueue q3(PackageQueueType::FIFO);
+    PackageQueue q4(PackageQueueType::LIFO);
+    PackageQueue q5(PackageQueueType::FIFO);
+    PackageQueue q6(PackageQueueType::LIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    std::unique_ptr<IPackageQueue> ptr6 = std::make_unique<PackageQueue>(q5);
+    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+    std::unique_ptr<IPackageStockpile> ptr5 = std::make_unique<PackageQueue>(q6);
+
+    Storehouse s1(1,std::move(ptr3));
+    Storehouse s2(2, std::move(ptr4));
+    Storehouse s3(3,std::move(ptr5));
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 2, std::move(ptr2));
+    Worker w3(3,3,std::move(ptr6));
+
+    ReceiverPreferences rev;
+    rev.add_receiver(&s1);
+    rev.add_receiver(&s2);
+    rev.add_receiver(&s3);
+    rev.add_receiver(&w1);
+    rev.add_receiver(&w2);
+    rev.add_receiver(&w3);
+
+    rev.remove_receiver(&s1);
+    std::vector<double> vec;
+    for(auto i = rev.cbegin(); i != rev.cend(); i++){
+        vec.push_back(i->second);
+    }
+    EXPECT_EQ(0.2, vec[0]);
+    EXPECT_EQ(0.2, vec[1]);
+    EXPECT_EQ(0.2, vec[2]);
+    EXPECT_EQ(0.2, vec[3]);
+    EXPECT_EQ(0.2, vec[4]);
+    vec.clear();
+
+    rev.remove_receiver(&s2);
+    for(auto i = rev.cbegin(); i != rev.cend(); i++){
+        vec.push_back(i->second);
+    }
+    EXPECT_EQ(vec[0],0.25);
+    EXPECT_EQ(vec[1],0.25);
+    EXPECT_EQ(vec[2],0.25);
+    EXPECT_EQ(vec[3],0.25);
+    vec.clear();
+
+    rev.remove_receiver(&s3);
+    rev.remove_receiver(&w1);
+    for(auto i = rev.cbegin(); i != rev.cend(); i++){
+        vec.push_back(i->second);
+    }
+    EXPECT_EQ(vec[0],0.5);
+    EXPECT_EQ(vec[1],0.5);
+
+}
+
+TEST(ReceiverPreferences, testing_choosing_receiver){
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::LIFO);
+    PackageQueue q3(PackageQueueType::FIFO);
+    PackageQueue q4(PackageQueueType::LIFO);
+    PackageQueue q5(PackageQueueType::FIFO);
+    PackageQueue q6(PackageQueueType::LIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    std::unique_ptr<IPackageQueue> ptr6 = std::make_unique<PackageQueue>(q5);
+    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+    std::unique_ptr<IPackageStockpile> ptr5 = std::make_unique<PackageQueue>(q6);
+
+    Storehouse s1(1,std::move(ptr3));
+    Storehouse s2(2, std::move(ptr4));
+    Storehouse s3(3,std::move(ptr5));
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 2, std::move(ptr2));
+    Worker w3(3,3,std::move(ptr6));
+
+    ReceiverPreferences rev;
+    rev.add_receiver(&s1);
+    rev.add_receiver(&s2);
+    rev.add_receiver(&s3);
+    rev.add_receiver(&w1);
+    rev.add_receiver(&w2);
+
+    IPackageReceiver* rec = rev.choose_receiver();
+    EXPECT_EQ(rec , &w2);
+}
+

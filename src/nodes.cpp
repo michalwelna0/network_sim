@@ -3,19 +3,22 @@
 
 void ReceiverPreferences::scale_probability() {
     double sum = 0;
-
-    for (const auto& iter : preferences_){
-        sum += iter.second;
+    for (const auto& iter: preferences_){
+        if (iter.second != 1){
+            sum += 1;
+        }
+        else{
+            sum += iter.second;
+        }
     }
-
     for (auto& iter: preferences_){
-        iter.second /= sum;
+        iter.second = 1/sum;
     }
 }
 
 
 void ReceiverPreferences::add_receiver(IPackageReceiver *r) {
-    preferences_[r] = 0.4; //narazie niech zerem inicjalizuje, tu ma byc probability_generator()
+    preferences_[r] = 1; //narazie niech zerem inicjalizuje, tu ma byc probability_generator()
     scale_probability();
 }
 
