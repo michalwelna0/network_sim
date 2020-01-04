@@ -18,21 +18,34 @@
 */
 
 class IPackageReceiver{
+
 public:
     virtual void receive_package(Package&& p) = 0;
     //virtual ReceiverType get_receiver_type() const = 0;
     virtual ElementID get_id() const =0;
 
+    using list_iterator = std::list<Package>::const_iterator;
+    virtual list_iterator begin() const = 0;
+    virtual list_iterator cbegin() const = 0;
+    virtual list_iterator end() const = 0;
+    virtual list_iterator cend() const  = 0;
 
 };
 
 
 class Storehouse : public IPackageReceiver{
+
 public:
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d): id_(id), d_(std::move(d)) {}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
     ElementID get_id() const override {return id_;}
+
+    list_iterator begin() const override {return d_->begin();}
+    list_iterator cbegin() const override {return d_->cbegin();}
+    list_iterator end() const override {return d_->end();}
+    list_iterator cend() const override {return d_->cend();}
+
 private:
     ElementID id_;
     std::unique_ptr<IPackageStockpile> d_;
@@ -77,19 +90,16 @@ public:
 protected:
     void push_package(Package&& pack);
 
-
-
 };
 
 
-class Ramp : public PackageSender{
+class Ramp : public PackageSender {
 
 public:
     Ramp(ElementID id, TimeOffset di) : id_(id), di_(di) {};
     void deliver_goods(Time t);
     TimeOffset get_delivery_interval() const { return di_; };
     ElementID get_id() const { return id_; }
-
 private:
     ElementID id_;
     TimeOffset di_;
@@ -97,9 +107,10 @@ private:
 };
 
 
-class Worker : public PackageSender, IPackageReceiver{
+class Worker : public PackageSender, public IPackageReceiver{
+
 public:
-    Worker(ElementID id, TimeOffset pd, std::unique_ptr<PackageQueue> q) : id_(id), pd_(pd), q_(std::move(q)) {}
+    Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q) : id_(id), pd_(pd), q_(std::move(q)) {}
     void do_work(Time t);
     TimeOffset get_processing_duration() const {return pd_;}
     Time get_package_processing_start_time() const {return t_;}
@@ -107,13 +118,18 @@ public:
     //ReceiverType get_receiver_type() const override;
     ElementID get_id() const override {return id_;}
 
+
+    list_iterator begin() const override {return q_->begin();}
+    list_iterator cbegin() const override {return q_->cbegin();}
+    list_iterator end() const override {return q_->end();}
+    list_iterator cend() const override {return q_->cend();}
+
 private:
     ElementID id_;
     TimeOffset pd_;
-    std::unique_ptr<PackageQueue> q_;
+    std::unique_ptr<IPackageQueue> q_;
     std::pair<Package,bool> workerBufor;
-    Time t_;
-
+    Time t_ = 0;
 
 };
 #endif //NETWORK_SIM_NODES_HPP

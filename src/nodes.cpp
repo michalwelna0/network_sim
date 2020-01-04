@@ -15,9 +15,8 @@ void ReceiverPreferences::scale_probability() {
 
 
 void ReceiverPreferences::add_receiver(IPackageReceiver *r) {
-    preferences_[r] = 0.0; //narazie niech zerem inicjalizuje, tu ma byc probability_generator()
+    preferences_[r] = 0.4; //narazie niech zerem inicjalizuje, tu ma byc probability_generator()
     scale_probability();
-
 }
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver *r) {
@@ -37,7 +36,6 @@ IPackageReceiver* ReceiverPreferences::choose_receiver() {
     }
 
     return nullptr;
-
 }
 
 void PackageSender::push_package(Package && pack) {
@@ -57,7 +55,6 @@ void PackageSender::send_package() {
         receiver_preferences_.choose_receiver()->receive_package(std::move(PackSenderBufor.first));
         PackSenderBufor.second = false;
     }
-
 }
 
 void Ramp::deliver_goods(Time t) {
@@ -66,19 +63,17 @@ void Ramp::deliver_goods(Time t) {
         push_package(std::move(pack));
         send_package();
     }
-
 }
 
 void Worker::do_work(Time t) {
-    if((t - t_)% pd_ == 0){
-        if(workerBufor.second){
+    if ((t - t_) % pd_ == 0) {
+        if (workerBufor.second) {
             push_package(std::move(workerBufor.first));
             workerBufor.second = false;
         }
 
         workerBufor = std::make_pair(q_->pop(), true);
         send_package();
+        t_ = t;
     }
-
-    t_ = t;
 }
