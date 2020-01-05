@@ -225,3 +225,59 @@ TEST(ReceiverPreferences, testing_choosing_receiver){
     EXPECT_EQ(rec , &w2);
 }
 
+TEST(Storehouse, testing_receiving_package){
+
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::LIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    Package p1;
+    Package p2;
+    Storehouse s1(1, std::move(ptr1));
+    Storehouse s2(2, std::move(ptr2));
+    s1.receive_package(std::move(p1));
+    s2.receive_package(std::move(p2));
+    EXPECT_EQ(s1.cend()->get_id(), p1.get_id());
+    EXPECT_EQ(s2.cbegin()->get_id(), p2.get_id());
+
+}
+
+TEST(Worker, testing_receiving_package){
+
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::LIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    Package p1;
+    Package p2;
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 1, std::move(ptr2));
+    w1.receive_package(std::move(p1));
+    w2.receive_package(std::move(p2));
+    EXPECT_EQ(w1.cend()->get_id(), p1.get_id());
+    EXPECT_EQ(w2.cbegin()->get_id(), p2.get_id());
+
+}
+/* czy robotnik przetwarza półprodukt odpowiednią liczbę tur? czy przekazuje dalej odpowiedni półprodukt?
+
+ TEST(Worker, testing_working_time){
+
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::LIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    Package p1;
+    Package p2;
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 2, std::move(ptr2));
+    w1.receive_package(std::move(p1));
+    w2.receive_package(std::move(p2));
+    for(std::size_t i = 1; i < 3; i++){
+
+        w1.do_work(i);
+
+    }
+    EXPECT_EQ(w1.get_buffer().second, false);
+}
+
+*/

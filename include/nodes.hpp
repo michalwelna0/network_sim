@@ -116,6 +116,7 @@ public:
     Time get_package_processing_start_time() const {return t_;}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
+    std::pair<Package,bool> get_buffer() const {return workerBufor;};
     ElementID get_id() const override {return id_;}
 
 
