@@ -42,7 +42,7 @@ IPackageReceiver* ReceiverPreferences::choose_receiver() {
 }
 
 void PackageSender::push_package(Package && pack) {
-    PackSenderBufor = std::make_pair(std::move(pack), true);
+    PackSenderBufor.emplace(std::move(pack));
 }
 
 void Worker ::receive_package(Package &&p) {
@@ -54,9 +54,9 @@ void Storehouse::receive_package(Package &&p) {
 }
 
 void PackageSender::send_package() {
-    if(PackSenderBufor.second){
-        receiver_preferences_.choose_receiver()->receive_package(std::move(PackSenderBufor.first));
-        PackSenderBufor.second = false;
+    if(PackSenderBufor){
+        receiver_preferences_.choose_receiver()->receive_package(std::move(*PackSenderBufor));
+        PackSenderBufor.reset();
     }
 }
 
@@ -64,24 +64,22 @@ void Ramp::deliver_goods(Time t) {
     if(t % di_== 0){
         Package pack;
         push_package(std::move(pack));
-        send_package();
+        //send_package();
     }
 }
 
 //ponizej zmienilem, bo czasem wgl nawet nie wchodzilo do pierwszego ifa i nie przekazywalo nigdzie paczki
 // ale nw czy jest dobrze /bw
 void Worker::do_work(Time t) {
-    bool to_continue = true;
-    while ((t - t_) % pd_ == 0) {
-        if(!to_continue) {break;}
-        if (workerBufor.second) {
-            push_package(std::move(workerBufor.first));
-            workerBufor.second = false;
-            to_continue = false;
+    if ((t - t_) % pd_ == 0) {
+        if (workerBufor) {
+            push_package(std::move(*workerBufor));
+            workerBufor.reset();
+
         }
 
-        if(q_->size() > 0) {workerBufor = std::make_pair(q_->pop(), true);}
-        send_package();
+        if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
+        //send_package();
         t_ = t;
     }
 }

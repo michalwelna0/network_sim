@@ -7,6 +7,7 @@
 #include <memory>
 #include <map>
 #include <functional>
+#include <optional>
 
 
 
@@ -80,11 +81,11 @@ private:
 class PackageSender{
 
 private:
-    std::pair<Package,bool> PackSenderBufor;
+    std::optional<Package> PackSenderBufor;
 
 public:
     void send_package();
-    std::pair<Package, bool> get_sending_buffer() const {return PackSenderBufor;}
+    std::optional<Package> get_sending_buffer() const {return PackSenderBufor;}
     ReceiverPreferences receiver_preferences_;
 
 protected:
@@ -116,7 +117,7 @@ public:
     Time get_package_processing_start_time() const {return t_;}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
-    std::pair<Package,bool> get_buffer() const {return workerBufor;};
+    std::optional<Package> get_buffer() const {return workerBufor;};
     ElementID get_id() const override {return id_;}
 
 
@@ -129,7 +130,7 @@ private:
     ElementID id_;
     TimeOffset pd_;
     std::unique_ptr<IPackageQueue> q_;
-    std::pair<Package,bool> workerBufor;
+    std::optional<Package> workerBufor;
     Time t_ = 0;
 
 };

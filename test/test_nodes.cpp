@@ -26,7 +26,7 @@ TEST(PackageSenderTEST, isBuforEmptyAfterSending){
     r1.deliver_goods(0);
     r1.send_package();
 
-    EXPECT_EQ(false , r1.get_sending_buffer().second);
+    EXPECT_EQ(std::nullopt , r1.get_sending_buffer());
 }
 
 //pisac testy, funkcja choose_receiver jest do poprawy, ogolnie tam dystrybuante trzeba lepiej zrobic, ale to inne testy trzeba napisac
@@ -57,7 +57,7 @@ TEST(RampTest, isBuforNotEmptyDoesItFullCorrectly){
     r2.deliver_goods(1);
 
     // jest false, bo czas dostawy jest 1, a worker2 pracuje 2 tury, wiec czeka z wyslaniem
-    EXPECT_EQ(false,r2.get_sending_buffer().second);
+    EXPECT_EQ(std::nullopt,r2.get_sending_buffer());
 
 }
 
@@ -88,7 +88,7 @@ TEST(RampTest1, isBuforNotEmptyDoesItFullCorrectly){
     r2.deliver_goods(2);
 
     // jest false bo w deliver_goods wysyla produkt do odbiorcy, zgadza sie argument
-    EXPECT_EQ(false,r2.get_sending_buffer().second);
+    EXPECT_EQ(1,r2.get_sending_buffer().has_value());
 
 }
 
@@ -193,37 +193,8 @@ TEST(ReceiverPreferences, scaling_probability_while_erasing_receivers){
 
 }
 
-TEST(ReceiverPreferences, testing_choosing_receiver){
-    PackageQueue q1(PackageQueueType::FIFO);
-    PackageQueue q2(PackageQueueType::LIFO);
-    PackageQueue q3(PackageQueueType::FIFO);
-    PackageQueue q4(PackageQueueType::LIFO);
-    PackageQueue q5(PackageQueueType::FIFO);
-    PackageQueue q6(PackageQueueType::LIFO);
-    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
-    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
-    std::unique_ptr<IPackageQueue> ptr6 = std::make_unique<PackageQueue>(q5);
-    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
-    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
-    std::unique_ptr<IPackageStockpile> ptr5 = std::make_unique<PackageQueue>(q6);
 
-    Storehouse s1(1,std::move(ptr3));
-    Storehouse s2(2, std::move(ptr4));
-    Storehouse s3(3,std::move(ptr5));
-    Worker w1(1, 1, std::move(ptr1));
-    Worker w2(2, 2, std::move(ptr2));
-    Worker w3(3,3,std::move(ptr6));
 
-    ReceiverPreferences rev;
-    rev.add_receiver(&s1);
-    rev.add_receiver(&s2);
-    rev.add_receiver(&s3);
-    rev.add_receiver(&w1);
-    rev.add_receiver(&w2);
-
-    IPackageReceiver* rec = rev.choose_receiver();
-    EXPECT_EQ(rec , &w2);
-}
 
 TEST(Storehouse, testing_receiving_package){
 
@@ -309,5 +280,34 @@ TEST(Worker, testing_sent_package_LIFO){
     w2.receive_package(std::move(p2));
     w1.receiver_preferences_.add_receiver(&w2);
     w1.do_work(1);
-    EXPECT_FALSE(w1.get_buffer().second);
+    EXPECT_EQ(std::nullopt,w1.get_sending_buffer());
+}
+
+
+TEST(Worker, testing_time_again){
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::FIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    Worker w(1, 2,std::move(ptr1));
+    Ramp r(1,2);
+    Storehouse s(1, std::move(ptr2));
+    r.receiver_preferences_.add_receiver(&w);
+    w.receiver_preferences_.add_receiver(&s);
+    r.deliver_goods(0);
+    r.send_package();
+    w.do_work(0);
+    w.send_package();
+    r.deliver_goods(1);
+    r.send_package();
+    w.do_work(1);
+    w.send_package();
+    r.deliver_goods(2);
+    r.send_package();
+    w.do_work(2);
+    w.send_package();
+
+
+    EXPECT_EQ(1,s.cbegin()->get_id());
+
 }
