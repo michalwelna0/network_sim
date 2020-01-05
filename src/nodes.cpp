@@ -68,14 +68,19 @@ void Ramp::deliver_goods(Time t) {
     }
 }
 
+//ponizej zmienilem, bo czasem wgl nawet nie wchodzilo do pierwszego ifa i nie przekazywalo nigdzie paczki
+// ale nw czy jest dobrze /bw
 void Worker::do_work(Time t) {
-    if ((t - t_) % pd_ == 0) {
+    bool to_continue = true;
+    while ((t - t_) % pd_ == 0) {
+        if(!to_continue) {break;}
         if (workerBufor.second) {
             push_package(std::move(workerBufor.first));
             workerBufor.second = false;
+            to_continue = false;
         }
 
-        workerBufor = std::make_pair(q_->pop(), true);
+        if(q_->size() > 0) {workerBufor = std::make_pair(q_->pop(), true);}
         send_package();
         t_ = t;
     }

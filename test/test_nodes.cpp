@@ -258,8 +258,43 @@ TEST(Worker, testing_receiving_package){
     EXPECT_EQ(w2.cbegin()->get_id(), p2.get_id());
 
 }
-//czy robotnik przetwarza półprodukt odpowiednią liczbę tur? czy przekazuje dalej odpowiedni półprodukt?
 
+TEST(Worker, testing_sent_package_FIFO){
+
+    PackageQueue q1(PackageQueueType::FIFO);
+    PackageQueue q2(PackageQueueType::LIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    Package p1;
+    Package p2;
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 1, std::move(ptr2));
+    w1.receive_package(std::move(p1));
+    w1.receive_package(std::move(p2));
+    w1.receiver_preferences_.add_receiver(&w2);
+    w1.do_work(1);
+    EXPECT_EQ(w2.cbegin()->get_id(), 1);
+
+}
+
+TEST(Worker, testing_sent_package_LIFO){
+
+    PackageQueue q1(PackageQueueType::LIFO);
+    PackageQueue q2(PackageQueueType::FIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    Package p1;
+    Package p2;
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 1, std::move(ptr2));
+    w1.receive_package(std::move(p1));
+    w1.receive_package(std::move(p2));
+    w1.receiver_preferences_.add_receiver(&w2);
+    w1.do_work(1);
+    EXPECT_EQ(w2.cbegin()->get_id(), 2);
+
+}
+//ponizszy test nie testuje tego co powinien, nie wiem jak tu dziala czas XD /bw
  TEST(Worker, testing_working_time){
 
     PackageQueue q1(PackageQueueType::FIFO);
@@ -272,20 +307,7 @@ TEST(Worker, testing_receiving_package){
     Worker w2(2, 2, std::move(ptr2));
     w1.receive_package(std::move(p1));
     w2.receive_package(std::move(p2));
+    w1.receiver_preferences_.add_receiver(&w2);
     w1.do_work(1);
     EXPECT_FALSE(w1.get_buffer().second);
-}
-
-TEST(Worker, testing_sent_package){
-
-    PackageQueue q1(PackageQueueType::FIFO);
-    PackageQueue q2(PackageQueueType::LIFO);
-    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
-    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
-    Package p1;
-    Package p2;
-    Worker w1(1, 1, std::move(ptr1));
-    Worker w2(2, 2, std::move(ptr2));
-    w1.receive_package(std::move(p1));
-    w2.receive_package(std::move(p2));
 }
