@@ -88,7 +88,7 @@ TEST(RampTest1, isBuforNotEmptyDoesItFullCorrectly){
     r2.deliver_goods(2);
 
     // jest false bo w deliver_goods wysyla produkt do odbiorcy, zgadza sie argument
-    EXPECT_EQ(1,r2.get_sending_buffer().has_value());
+    EXPECT_EQ(std::nullopt,r2.get_sending_buffer());
 
 }
 

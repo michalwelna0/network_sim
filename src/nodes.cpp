@@ -64,7 +64,7 @@ void Ramp::deliver_goods(Time t) {
     if(t % di_== 0){
         Package pack;
         push_package(std::move(pack));
-        //send_package();
+        send_package();
     }
 }
 
@@ -79,7 +79,7 @@ void Worker::do_work(Time t) {
         }
 
         if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
-        //send_package();
+        send_package();
         t_ = t;
     }
 }

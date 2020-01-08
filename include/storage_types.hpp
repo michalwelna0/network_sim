@@ -21,11 +21,11 @@ public:
     virtual void push(Package&& pack) = 0;
     virtual bool empty()const = 0;
     virtual std::size_t  size() const = 0;
-    using citerator = std::list<Package>::const_iterator;
-    virtual citerator cbegin () const = 0;
-    virtual citerator cend() const = 0;
-    virtual citerator begin() const = 0;
-    virtual citerator end () const = 0;
+    using const_iterator = std::list<Package>::const_iterator;
+    virtual const_iterator cbegin () const = 0;
+    virtual const_iterator cend() const = 0;
+    virtual const_iterator begin() const = 0;
+    virtual const_iterator end () const = 0;
     virtual ~IPackageStockpile() {};
 };
 
@@ -47,10 +47,10 @@ public:
     Package pop() override;
     PackageQueueType get_queue_type()const override;
     std::string getFIFO_or_LIFO(PackageQueueType type);
-    citerator cbegin() const override {return package_queue.cbegin();}
-    citerator cend() const override  {return package_queue.cend();}
-    citerator begin() const override {return package_queue.begin();}
-    citerator end() const override {return package_queue.end();}
+    const_iterator cbegin() const override {return package_queue.cbegin();}
+    const_iterator cend() const override  {return package_queue.cend();}
+    const_iterator begin() const override {return package_queue.begin();}
+    const_iterator end() const override {return package_queue.end();}
 
 
 
