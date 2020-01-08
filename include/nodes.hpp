@@ -25,11 +25,11 @@ public:
     //virtual ReceiverType get_receiver_type() const = 0;
     virtual ElementID get_id() const =0;
 
-    using list_iterator = std::list<Package>::const_iterator;
-    virtual list_iterator begin() const = 0;
-    virtual list_iterator cbegin() const = 0;
-    virtual list_iterator end() const = 0;
-    virtual list_iterator cend() const  = 0;
+    using const_iterator = std::list<Package>::const_iterator;
+    virtual const_iterator begin() const = 0;
+    virtual const_iterator cbegin() const = 0;
+    virtual const_iterator end() const = 0;
+    virtual const_iterator cend() const  = 0;
 
 };
 
@@ -38,15 +38,15 @@ class Storehouse : public IPackageReceiver{
 
 public:
     //nw o co chodzi z tym konstruktorem, cos tu do zmiany/dodania
-    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d): id_(id), d_(std::move(d)) {}
+    Storehouse(ElementID id, PackageQueue d ): id_(id), d_(std::make_unique<PackageQueue>(d)) {}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
     ElementID get_id() const override {return id_;}
 
-    list_iterator begin() const override {return d_->begin();}
-    list_iterator cbegin() const override {return d_->cbegin();}
-    list_iterator end() const override {return d_->end();}
-    list_iterator cend() const override {return d_->cend();}
+    const_iterator begin() const override {return d_->begin();}
+    const_iterator cbegin() const override {return d_->cbegin();}
+    const_iterator end() const override {return d_->end();}
+    const_iterator cend() const override {return d_->cend();}
 
 private:
     ElementID id_;
@@ -87,7 +87,7 @@ private:
 
 public:
     void send_package();
-    std::optional<Package> get_sending_buffer() const {return PackSenderBufor;}
+    const std::optional<Package>& get_sending_buffer() const {return PackSenderBufor;}
     ReceiverPreferences receiver_preferences_;
 
 protected:
@@ -119,14 +119,14 @@ public:
     Time get_package_processing_start_time() const {return t_;}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
-    std::optional<Package> get_buffer() const {return workerBufor;};
+    const std::optional<Package>& get_buffer() const {return workerBufor;};
     ElementID get_id() const override {return id_;}
 
 
-    list_iterator begin() const override {return q_->begin();}
-    list_iterator cbegin() const override {return q_->cbegin();}
-    list_iterator end() const override {return q_->end();}
-    list_iterator cend() const override {return q_->cend();}
+    const_iterator begin() const override {return q_->begin();}
+    const_iterator cbegin() const override {return q_->cbegin();}
+    const_iterator end() const override {return q_->end();}
+    const_iterator cend() const override {return q_->cend();}
 
 private:
     ElementID id_;

@@ -11,10 +11,10 @@ TEST(PackageSenderTEST, isBuforEmptyAfterSending){
     PackageQueue q4(PackageQueueType::LIFO);
     std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
     std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
-    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
-    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
-    Storehouse s1(1, std::move(ptr3));
-    Storehouse s2(2, std::move(ptr4));
+    //std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    //std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+    Storehouse s1(1, q3);
+    Storehouse s2(2, q4);
     Ramp r1(1, 1);
     Ramp r2(2, 2);
     Worker w1(1, 1, std::move(ptr1));
@@ -41,10 +41,10 @@ TEST(RampTest, isBuforNotEmptyDoesItFullCorrectly){
     PackageQueue q4(PackageQueueType::LIFO);
     std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
     std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
-    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
-    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
-    Storehouse s1(1, std::move(ptr3));
-    Storehouse s2(2, std::move(ptr4));
+    //std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    //std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+    Storehouse s1(1, q3);
+    Storehouse s2(2, q4);
     Ramp r1(1, 1);
     Ramp r2(2, 2);
     Worker w1(1, 1, std::move(ptr1));
@@ -70,10 +70,10 @@ TEST(RampTest1, isBuforNotEmptyDoesItFullCorrectly){
     PackageQueue q4(PackageQueueType::LIFO);
     std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
     std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
-    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
-    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
-    Storehouse s1(1, std::move(ptr3));
-    Storehouse s2(2, std::move(ptr4));
+    //std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    //std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+    Storehouse s1(1, q3);
+    Storehouse s2(2, q4);
     Ramp r1(1, 1);
     Ramp r2(2, 2);
     Worker w1(1, 1, std::move(ptr1));
@@ -99,11 +99,11 @@ TEST(ReceiverPreferences, scaling_probability_while_adding_receivers){
     PackageQueue q4(PackageQueueType::LIFO);
     std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
     std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
-    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
-    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+    //std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    //std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
 
-    Storehouse s1(1,std::move(ptr3));
-    Storehouse s2(2, std::move(ptr4));
+    Storehouse s1(1,q3);
+    Storehouse s2(2, q4);
     Worker w1(1, 1, std::move(ptr1));
     Worker w2(2, 2, std::move(ptr2));
 
@@ -142,13 +142,13 @@ TEST(ReceiverPreferences, scaling_probability_while_erasing_receivers){
     std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
     std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
     std::unique_ptr<IPackageQueue> ptr6 = std::make_unique<PackageQueue>(q5);
-    std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
-    std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
-    std::unique_ptr<IPackageStockpile> ptr5 = std::make_unique<PackageQueue>(q6);
+    //std::unique_ptr<IPackageStockpile> ptr3 = std::make_unique<PackageQueue>(q3);
+    //std::unique_ptr<IPackageStockpile> ptr4 = std::make_unique<PackageQueue>(q4);
+    //std::unique_ptr<IPackageStockpile> ptr5 = std::make_unique<PackageQueue>(q6);
 
-    Storehouse s1(1,std::move(ptr3));
-    Storehouse s2(2, std::move(ptr4));
-    Storehouse s3(3,std::move(ptr5));
+    Storehouse s1(1,q3);
+    Storehouse s2(2, q4);
+    Storehouse s3(3,q6);
     Worker w1(1, 1, std::move(ptr1));
     Worker w2(2, 2, std::move(ptr2));
     Worker w3(3,3,std::move(ptr6));
@@ -200,12 +200,12 @@ TEST(Storehouse, testing_receiving_package){
 
     PackageQueue q1(PackageQueueType::FIFO);
     PackageQueue q2(PackageQueueType::LIFO);
-    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
-    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    //std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    //std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
     Package p1;
     Package p2;
-    Storehouse s1(1, std::move(ptr1));
-    Storehouse s2(2, std::move(ptr2));
+    Storehouse s1(1, q1);
+    Storehouse s2(2, q2);
     s1.receive_package(std::move(p1));
     s2.receive_package(std::move(p2));
     EXPECT_EQ(s1.cend()->get_id(), p1.get_id());
@@ -288,10 +288,10 @@ TEST(Worker, testing_time_again){
     PackageQueue q1(PackageQueueType::FIFO);
     PackageQueue q2(PackageQueueType::FIFO);
     std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
-    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
+    //std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
     Worker w(1, 2,std::move(ptr1));
     Ramp r(1,2);
-    Storehouse s(1, std::move(ptr2));
+    Storehouse s(1, q2);
     r.receiver_preferences_.add_receiver(&w);
     w.receiver_preferences_.add_receiver(&s);
     r.deliver_goods(0);
