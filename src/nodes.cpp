@@ -61,25 +61,26 @@ void PackageSender::send_package() {
 }
 
 void Ramp::deliver_goods(Time t) {
-    if(t % di_== 0){
+    if(t % di_== 1){
         Package pack;
         push_package(std::move(pack));
-        send_package();
+        //send_package();
     }
 }
 
 //ponizej zmienilem, bo czasem wgl nawet nie wchodzilo do pierwszego ifa i nie przekazywalo nigdzie paczki
 // ale nw czy jest dobrze /bw
 void Worker::do_work(Time t) {
-    if ((t - t_) % pd_ == 0) {
+    if (t  % pd_ == 1) {
         if (workerBufor) {
             push_package(std::move(*workerBufor));
             workerBufor.reset();
+            //send_package();
 
         }
-
         if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
-        send_package();
-        t_ = t;
     }
+    //send_package();
+    //t_ = t;
+
 }

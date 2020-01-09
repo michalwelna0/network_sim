@@ -311,3 +311,55 @@ TEST(Worker, testing_time_again){
     EXPECT_EQ(1,s.cbegin()->get_id());
 
 }
+
+
+TEST(WorkerTest, HasBuffer) {
+    // Test scenariusza opisanego na stronie:
+    // http://home.agh.edu.pl/~mdig/dokuwiki/doku.php?id=teaching:programming:soft-dev:topics:net-simulation:part_nodes#bufor_aktualnie_przetwarzanego_polproduktu
+
+    Worker w(1, 2, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
+    Time t = 1;
+
+    // FIXME: poprawić w docelowej wersji (dodać konstruktor z ID półproduktu)
+//    w.receive_package(Package(1));
+//    w.do_work(t);
+//    ++t;
+//    w.receive_package(Package(2));
+//    w.do_work(t);
+//    auto& buffer = w.get_sending_buffer();
+    //
+    Package p1;
+    Package p2;
+    w.receive_package(std::move(p1));
+    w.do_work(t);
+    ++t;
+    w.receive_package(std::move(p2));
+    w.do_work(t);
+    auto& buffer = w.get_sending_buffer();
+
+
+    ASSERT_TRUE(buffer.has_value());
+    EXPECT_EQ(buffer.value().get_id(), 1);
+}
+
+
+TEST(RampTest, IsDeliveryOnTime) {
+
+    Ramp r(1, 2);
+    // FIXME: poprawić w docelowej wersji (konstruktor powinien posiadać argument domyślny)
+    //auto recv = std::make_unique<Storehouse>(1);
+    //auto recv = std::make_unique<Storehouse>(1, std::make_unique<PackageQueue>(PackageQueueType::LIFO));
+    PackageQueue q1(PackageQueueType::LIFO);
+    Storehouse s(1,q1);
+    r.receiver_preferences_.add_receiver(&s);
+
+    r.deliver_goods(1);
+    ASSERT_TRUE(r.get_sending_buffer().has_value());
+    r.send_package();
+
+    r.deliver_goods(2);
+    ASSERT_FALSE(r.get_sending_buffer().has_value());
+
+    r.deliver_goods(3);
+    ASSERT_TRUE(r.get_sending_buffer().has_value());
+}

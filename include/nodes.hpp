@@ -119,7 +119,7 @@ public:
     Time get_package_processing_start_time() const {return t_;}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
-    const std::optional<Package>& get_buffer() const {return workerBufor;};
+    //const std::optional<Package>& get_sending_buffer() const {return workerBufor;};
     ElementID get_id() const override {return id_;}
 
 
@@ -133,7 +133,7 @@ private:
     TimeOffset pd_;
     std::unique_ptr<IPackageQueue> q_;
     std::optional<Package> workerBufor;
-    Time t_ = 0;
+    Time t_ = 1;
 
 };
 #endif //NETWORK_SIM_NODES_HPP

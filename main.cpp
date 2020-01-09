@@ -9,6 +9,7 @@
 #include "simulation.hpp"
 
 int main(){
+    /*
     PackageQueue q1(PackageQueueType::FIFO);
     PackageQueue q2(PackageQueueType::FIFO);
     std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
@@ -23,6 +24,20 @@ int main(){
         r.deliver_goods(i);
         w.do_work(i);
     }
+     */
+
+    Worker w(1, 2, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
+    Time t = 1;
+    Package p1;
+    Package p2;
+    w.receive_package(std::move(p1));
+    w.do_work(t);
+    ++t;
+    w.receive_package(std::move(p2));
+    w.do_work(t);
+    //auto& buffer = w.get_sending_buffer();
+    //bool buff = buffer.has_value();
+
 
     return 0;
 
