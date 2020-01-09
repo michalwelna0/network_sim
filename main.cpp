@@ -26,17 +26,19 @@ int main(){
     }
      */
 
-    Worker w(1, 2, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
-    Time t = 1;
+    PackageQueue q1(PackageQueueType::LIFO);
+    PackageQueue q2(PackageQueueType::FIFO);
+    std::unique_ptr<IPackageQueue> ptr1 = std::make_unique<PackageQueue>(q1);
+    std::unique_ptr<IPackageQueue> ptr2 = std::make_unique<PackageQueue>(q2);
     Package p1;
     Package p2;
-    w.receive_package(std::move(p1));
-    w.do_work(t);
-    ++t;
-    w.receive_package(std::move(p2));
-    w.do_work(t);
-    //auto& buffer = w.get_sending_buffer();
-    //bool buff = buffer.has_value();
+    Worker w1(1, 1, std::move(ptr1));
+    Worker w2(2, 1, std::move(ptr2));
+    w1.receive_package(std::move(p1));
+    w1.receive_package(std::move(p2));
+    w1.receiver_preferences_.add_receiver(&w2);
+    w1.do_work(1);
+   
 
 
     return 0;

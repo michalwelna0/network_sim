@@ -61,7 +61,14 @@ void PackageSender::send_package() {
 }
 
 void Ramp::deliver_goods(Time t) {
-    if(t % di_== 1){
+    if(t==1){Package pack; push_package(std::move(pack));}
+    if(di_==1){
+        Package pack;
+        push_package(std::move(pack));
+    }
+
+
+    if(t % di_== 1 && di_!=1){
         Package pack;
         push_package(std::move(pack));
         //send_package();
@@ -71,7 +78,19 @@ void Ramp::deliver_goods(Time t) {
 //ponizej zmienilem, bo czasem wgl nawet nie wchodzilo do pierwszego ifa i nie przekazywalo nigdzie paczki
 // ale nw czy jest dobrze /bw
 void Worker::do_work(Time t) {
-    if (t  % pd_ == 1) {
+
+    if(t==1) {workerBufor.emplace(q_->pop());}
+    if(pd_==1){
+        if (workerBufor) {
+            push_package(std::move(*workerBufor));
+            workerBufor.reset();
+            //send_package();
+
+        }
+        if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
+
+    }
+    if (t  % pd_ == 0 && pd_!=1) {
         if (workerBufor) {
             push_package(std::move(*workerBufor));
             workerBufor.reset();

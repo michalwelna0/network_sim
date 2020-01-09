@@ -38,7 +38,7 @@ class Storehouse : public IPackageReceiver{
 
 public:
     //nw o co chodzi z tym konstruktorem, cos tu do zmiany/dodania
-    Storehouse(ElementID id, PackageQueue d ): id_(id), d_(std::make_unique<PackageQueue>(d)) {}
+    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d ): id_(id), d_(std::move(d)) {}
     void receive_package (Package&& p) override;
     //ReceiverType get_receiver_type() const override;
     ElementID get_id() const override {return id_;}
