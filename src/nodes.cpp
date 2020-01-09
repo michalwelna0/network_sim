@@ -80,7 +80,7 @@ void Ramp::deliver_goods(Time t) {
 void Worker::do_work(Time t) {
 
     if(t==1) {workerBufor.emplace(q_->pop());}
-    if(pd_==1){
+    if(pd_==1 && t!=1){
         if (workerBufor) {
             push_package(std::move(*workerBufor));
             workerBufor.reset();

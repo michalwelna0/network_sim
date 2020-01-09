@@ -278,6 +278,7 @@ TEST(Worker, testing_sent_package_LIFO){
     w1.receive_package(std::move(p2));
     w1.receiver_preferences_.add_receiver(&w2);
     w1.do_work(1);
+    w1.do_work(2);
     w1.send_package();
     EXPECT_EQ(w2.cbegin()->get_id(), 2);
 
