@@ -1,6 +1,44 @@
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 #include "nodes.hpp"
+#include "package.hpp"
+#include "storage_types.hpp"
+#include "types.hpp"
+
+#include "nodes_mocks.hpp"
+#include "global_functions_mock.hpp"
+
+#include <iostream>
+
+TEST(ReceiverPreferencesTest, AddReceiversRescalesProbability) {
+    // Upewnij się, że dodanie odbiorcy spowoduje przeskalowanie prawdopodobieństw.
+    ReceiverPreferences rp;
+
+    MockReceiver r1;
+    rp.add_receiver(&r1);
+    ASSERT_NE(rp.get_preferences().find(&r1), rp.get_preferences().end());
+    EXPECT_EQ(rp.get_preferences().at(&r1), 1.0);
+
+    MockReceiver r2;
+    rp.add_receiver(&r2);
+    EXPECT_EQ(rp.get_preferences().at(&r1), 0.5);
+    ASSERT_NE(rp.get_preferences().find(&r2), rp.get_preferences().end());
+    EXPECT_EQ(rp.get_preferences().at(&r2), 0.5);
+}
+
+TEST(ReceiverPreferencesTest, RemoveReceiversRescalesProbability) {
+    // Upewnij się, że usunięcie odbiorcy spowoduje przeskalowanie pozostałych prawdopodobieństw.
+    ReceiverPreferences rp;
+
+    MockReceiver r1, r2;
+    rp.add_receiver(&r1);
+    rp.add_receiver(&r2);
+
+    rp.remove_receiver(&r2);
+    ASSERT_EQ(rp.get_preferences().find(&r2), rp.get_preferences().end());
+    EXPECT_EQ(rp.get_preferences().at(&r1), 1.0);
+}
 
 TEST(PackageSenderTEST, isBuforEmptyAfterSending){
     //czy po wyslaniu polproduktu, bufor jest pusty?

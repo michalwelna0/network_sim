@@ -28,7 +28,7 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver *r) {
 }
 
 IPackageReceiver* ReceiverPreferences::choose_receiver() {
-    double probability = probability_generator();
+    double probability = default_probability_generator();
     double sum = 0;
 
     for (const auto& iter : preferences_){

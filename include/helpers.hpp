@@ -1,13 +1,16 @@
-#ifndef NETWORK_SIM_HELPERS_HPP
-#define NETWORK_SIM_HELPERS_HPP
-#include "types.hpp"
+#ifndef HELPERS_HPP_
+#define HELPERS_HPP_
+
+#include <functional>
 #include <random>
-#include <ctime>
-#include <cstdlib>
 
+#include "types.hpp"
 
+extern std::random_device rd;
+extern std::mt19937 rng;
 
-double probability_generator();
+extern double default_probability_generator();
 
+extern ProbabilityGenerator probability_generator;
 
-#endif //NETWORK_SIM_HELPERS_HPP
+#endif /* HELPERS_HPP_ */

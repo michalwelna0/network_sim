@@ -20,7 +20,10 @@ add_executable(network_sim_debug ${SOURCE_FILES} main.cpp )
 set(SOURCE_FILES_TESTS
         test/test_package.cpp
         test/test_storage_types.cpp
-        test/test_nodes.cpp)
+        test/test_nodes.cpp
+        test/nodes_mocks.hpp
+        test/global_functions_mock.hpp
+        test/config.hpp)
 
 add_executable(network_sim_test ${SOURCE_FILES_TESTS} ${SOURCE_FILES} test/main_test.cpp)
 
