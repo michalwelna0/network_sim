@@ -11,6 +11,7 @@
 
 #include <iostream>
 
+
 TEST(ReceiverPreferencesTest, AddReceiversRescalesProbability) {
     // Upewnij się, że dodanie odbiorcy spowoduje przeskalowanie prawdopodobieństw.
     ReceiverPreferences rp;
@@ -293,10 +294,9 @@ TEST(Worker, testing_sent_package_FIFO){
     Worker w1(1, 1, std::move(ptr1));
     Worker w2(2, 1, std::move(ptr2));
     w1.receive_package(std::move(p1));
-    //w1.receive_package(std::move(p2));
+    w1.receive_package(std::move(p2));
     w1.receiver_preferences_.add_receiver(&w2);
     w1.do_work(1);
-    w1.do_work(2);
     w1.send_package();
     EXPECT_EQ(w2.cbegin()->get_id(), 1);
 
@@ -316,7 +316,6 @@ TEST(Worker, testing_sent_package_LIFO){
     w1.receive_package(std::move(p2));
     w1.receiver_preferences_.add_receiver(&w2);
     w1.do_work(1);
-    w1.do_work(2);
     w1.send_package();
     EXPECT_EQ(w2.cbegin()->get_id(), 2);
 
@@ -422,5 +421,33 @@ TEST(RampTest, IsDeliveryOnTime) {
     ASSERT_TRUE(r.get_sending_buffer().has_value());
 }
 
+class PackageSenderFixture : public PackageSender {
+    // Nie sposób w teście wykorzystać prywetnej metody `PackageSender::push_package()`,
+    // dlatego do celów testowych stworzona została implementacja zawierająca
+    // metodę `push_package()` w sekcji publicznej.
+public:
+    void push_package(Package&& package) { PackageSender::push_package(std::move(package)); }
+};
 
+using ::testing::Return;
+using ::testing::_;
+
+TEST(PackageSenderTest, SendPackage) {
+    MockReceiver mock_receiver;
+    // Oczekujemy, że metoda `receive_package()` obiektu `mock_receiver` zostanie
+    // wywołana dwukrotnie, z dowolnym argumentem (symbol `_`).
+    EXPECT_CALL(mock_receiver, receive_package(_)).Times(1);
+
+    PackageSenderFixture sender;
+    sender.receiver_preferences_.add_receiver(&mock_receiver);
+    // Zwróć uwagę, że poniższa instrukcja korzysta z semantyki referencji do r-wartości.
+    sender.push_package(Package());
+
+    sender.send_package();
+
+    EXPECT_FALSE(sender.get_sending_buffer());
+
+    // Upewnij się, że proces wysyłania zachodzi tylko wówczas, gdy w bufor jest pełny.
+    sender.send_package();
+}
 

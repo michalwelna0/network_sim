@@ -62,13 +62,13 @@ void PackageSender::send_package() {
 
 void Ramp::deliver_goods(Time t) {
     if(t==1){Package pack; push_package(std::move(pack));}
-    if(di_==1){
+    if(di_==1 && t != 1){
         Package pack;
         push_package(std::move(pack));
     }
 
 
-    if(t % di_== 1 && di_!=1){
+    if(t % di_== 1 && di_!=1 && t != 1){
         Package pack;
         push_package(std::move(pack));
         //send_package();
@@ -80,14 +80,15 @@ void Ramp::deliver_goods(Time t) {
 void Worker::do_work(Time t) {
 
     if(t==1) {workerBufor.emplace(q_->pop());}
-    if(pd_==1 && t!=1){
+
+    if(pd_==1){
         if (workerBufor) {
             push_package(std::move(*workerBufor));
             workerBufor.reset();
             //send_package();
-
         }
-        if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
+
+    if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
 
     }
     if (t  % pd_ == 0 && pd_!=1) {
