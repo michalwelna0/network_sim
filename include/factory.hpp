@@ -23,6 +23,7 @@ public:
 
     void remove_by_id(ElementID id_){auto ptr = find_by_id(id_); if(ptr!=list_.end()){list_.erase(ptr);}}
 
+
     NodeCollection<Node>::iterator find_by_id(ElementID id_) {return std::find_if(list_.begin(),list_.end(),
             [id_](const auto& elem){return (elem.get_id()==id_);});};
 
@@ -38,24 +39,24 @@ private:
 
 
 class Factory{
-    // dla klasy Ramp
+
 public:
     void add_ramp(Ramp&& ramp){ramps.add(ramp);}
-    void remove_ramp(ElementID id) {ramps.remove_by_id(id);}
+    void remove_ramp(ElementID id);
     NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id) {return ramps.find_by_id(id);}
     NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id) const {return ramps.find_by_id(id);}
     NodeCollection<Ramp>::const_iterator ramp_cbegin() const {return ramps.cbegin();}
     NodeCollection<Ramp>::const_iterator ramp_cend() const {return ramps.cend();}
 
     void add_worker(Worker&& worker){workers.add(worker);}
-    void remove_worker(ElementID id) {workers.remove_by_id(id);}
+    void remove_worker(ElementID id);
     NodeCollection<Worker>::iterator find_worker_by_id(ElementID id) {return workers.find_by_id(id);}
     NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const {return workers.find_by_id(id);}
     NodeCollection<Worker>::const_iterator worker_cbegin() const {return workers.cbegin();}
     NodeCollection<Worker>::const_iterator worker_cend() const {return workers.cend();}
 
     void add_storehouse(Storehouse&& storehouse){storehouses.add(storehouse);}
-    void remove_storehouse(ElementID id) {storehouses.remove_by_id(id);}
+    void remove_storehouse(ElementID id);
     NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id) {return storehouses.find_by_id(id);}
     NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id) const {return storehouses.find_by_id(id);}
     NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const {return storehouses.cbegin();}
@@ -72,12 +73,8 @@ private:
     NodeCollection<Ramp> ramps;
     NodeCollection<Worker> workers;
     NodeCollection<Storehouse> storehouses;
-    void remove_receiver( NodeCollection<Node>& collection ,ElementID  id:);
-
-
-
-
-
+    template <class Node>
+    void remove_receiver(NodeCollection<Node>& collection, ElementID id) {collection.remove_by_id(id);}
 
 };
 

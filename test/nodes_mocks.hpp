@@ -21,9 +21,9 @@ public:
 
     MOCK_CONST_METHOD0(cend, IPackageStockpile::const_iterator());
 
-    #if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
+    //#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     MOCK_CONST_METHOD0(get_receiver_type, ReceiverType());
-    #endif
+    //#endif
 
     MOCK_CONST_METHOD0(get_id, ElementID());
 };
