@@ -452,7 +452,7 @@ TEST(PackageSenderTest, SendPackage) {
     sender.send_package();
 }
 
-/*//FIXME: odkomentować po wyjaśnieniu sytuacji z domyślnym generatorem prawdopodobieństwa
+//FIXME: odkomentować po wyjaśnieniu sytuacji z domyślnym generatorem prawdopodobieństwa
 TEST(ReceiverPreferencesChoosingTest, ChooseReceiver) {
     // Upewnij się, że odbiorcy wybierani są z właściwym prawdopodobieństwem.
 
@@ -474,4 +474,3 @@ TEST(ReceiverPreferencesChoosingTest, ChooseReceiver) {
     }
 }
 
- */

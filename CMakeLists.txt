@@ -11,7 +11,8 @@ set(SOURCE_FILES
         src/package.cpp
         src/storage_types.cpp
         src/nodes.cpp
-        src/helpers.cpp)
+        src/helpers.cpp
+        src/factory.cpp)
 
 add_executable(network_sim_debug ${SOURCE_FILES} main.cpp )
 
@@ -23,7 +24,8 @@ set(SOURCE_FILES_TESTS
         test/test_nodes.cpp
         test/nodes_mocks.hpp
         test/global_functions_mock.hpp
-        test/config.hpp)
+        test/config.hpp
+        test/test_factory.cpp)
 
 add_executable(network_sim_test ${SOURCE_FILES_TESTS} ${SOURCE_FILES} test/main_test.cpp)
 

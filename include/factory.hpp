@@ -19,15 +19,15 @@ public:
     iterator begin() {return list_.begin();}
     iterator end() {return list_.end();}
 
-    void add(Node& node) {return list_.insert(std::move(node));}
+    void add(Node& node) {return list_.push_back(std::move(node));}
 
     void remove_by_id(ElementID id_){auto ptr = find_by_id(id_); if(ptr!=list_.end()){list_.erase(ptr);}}
 
     NodeCollection<Node>::iterator find_by_id(ElementID id_) {return std::find_if(list_.begin(),list_.end(),
-            [id_](const auto& elem){return (elem->get_id()==id_);});};
+            [id_](const auto& elem){return (elem.get_id()==id_);});};
 
     NodeCollection<Node>::const_iterator find_by_id(ElementID id_)const {return std::find_if(list_.cbegin(),list_.cend(),
-            [id_](const auto& elem){return (elem->get_id()==id_);});};
+            [id_](const auto& elem){return (elem.get_id()==id_);});};
 
 
 private:
@@ -62,15 +62,17 @@ public:
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const {return storehouses.cend();}
 
     bool is_consistent() const;
-    void do_deliveries(Time t) {std::for_each(ramps.begin(),ramps.end(),[t](auto buff){buff->deliver_goods(t);});}
-    void do_package_passing();
-    void do_work(Time t) {std::for_each(workers.begin(),workers.end(), [t](auto buff){buff->deliver_goods(t);});}
+    void do_deliveries(Time t) {std::for_each(ramps.begin(),ramps.end(),[t](auto &buff){buff.deliver_goods(t);});}
+    void do_package_passing() {std::for_each(ramps.begin(),ramps.end(),[](auto& buff){buff.send_package();});
+        std::for_each(workers.begin(),workers.end(),[](auto& buff){buff.send_package();}); }
+    void do_work(Time t) {std::for_each(workers.begin(),workers.end(), [t](auto &buff){buff.do_work(t);});}
 
 
 private:
     NodeCollection<Ramp> ramps;
     NodeCollection<Worker> workers;
     NodeCollection<Storehouse> storehouses;
+    void remove_receiver( NodeCollection<Node>& collection ,ElementID  id:);
 
 
 

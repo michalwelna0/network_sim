@@ -22,6 +22,7 @@ public:
     virtual void receive_package(Package&& p) = 0;
     virtual ReceiverType get_receiver_type() const = 0;
     virtual ElementID get_id() const =0;
+    virtual ~IPackageReceiver() = default;
 
     using const_iterator = std::list<Package>::const_iterator;
     virtual const_iterator begin() const = 0;
@@ -90,6 +91,7 @@ public:
     void send_package();
     const std::optional<Package>& get_sending_buffer() const {return PackSenderBufor;}
     ReceiverPreferences receiver_preferences_;
+
 
 protected:
     void push_package(Package&& pack);
