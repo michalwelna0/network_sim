@@ -22,7 +22,7 @@ void Factory::remove_worker(ElementID id){
         }
 
     }
-
+//michal welna
     for(auto& elem : ramps){
 
         for(auto& elem_prefs : elem.receiver_preferences_){
