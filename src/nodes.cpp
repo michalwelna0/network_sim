@@ -49,6 +49,12 @@ void Worker ::receive_package(Package &&p) {
     q_->push(std::move(p));
 }
 
+
+
+
+
+
+
 void Storehouse::receive_package(Package &&p) {
     d_->push(std::move(p));
 }
@@ -88,7 +94,7 @@ void Worker::do_work(Time t) {
             //send_package();
         }
 
-    if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
+        if(q_->size() > 0) {workerBufor.emplace(q_->pop());}
 
     }
     if (t  % pd_ == 0 && pd_!=1) {

@@ -11,18 +11,16 @@
 
 
 
-/*enum class ReceiverType{
-    Ramp = 1,
-    Worker = 2,
-    Storehouse = 3
+enum class ReceiverType{
+    WORKER,STOREHOUSE
 };
-*/
+
 
 class IPackageReceiver{
 
 public:
     virtual void receive_package(Package&& p) = 0;
-    //virtual ReceiverType get_receiver_type() const = 0;
+    virtual ReceiverType get_receiver_type() const = 0;
     virtual ElementID get_id() const =0;
 
     using const_iterator = std::list<Package>::const_iterator;
@@ -40,7 +38,7 @@ public:
     //nw o co chodzi z tym konstruktorem, cos tu do zmiany/dodania
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d ): id_(id), d_(std::move(d)) {}
     void receive_package (Package&& p) override;
-    //ReceiverType get_receiver_type() const override;
+    ReceiverType get_receiver_type() const override {return storehouse;}
     ElementID get_id() const override {return id_;}
 
     const_iterator begin() const override {return d_->begin();}
@@ -51,6 +49,7 @@ public:
 private:
     ElementID id_;
     std::unique_ptr<IPackageStockpile> d_;
+    ReceiverType storehouse = ReceiverType::STOREHOUSE;
 
 };
 
@@ -70,6 +69,8 @@ public:
 
     const_iterator cbegin() const {return preferences_.cbegin();}
     const_iterator cend() const {return preferences_.cend();}
+    const_iterator begin() const {return preferences_.begin();}
+    const_iterator end() const {return preferences_.end();}
 
 
 private:
@@ -118,8 +119,7 @@ public:
     TimeOffset get_processing_duration() const {return pd_;}
     Time get_package_processing_start_time() const {return t_;}
     void receive_package (Package&& p) override;
-    //ReceiverType get_receiver_type() const override;
-    //const std::optional<Package>& get_sending_buffer() const {return workerBufor;};
+    ReceiverType get_receiver_type() const override {return worker;}
     ElementID get_id() const override {return id_;}
 
 
@@ -133,6 +133,7 @@ private:
     TimeOffset pd_;
     std::unique_ptr<IPackageQueue> q_;
     std::optional<Package> workerBufor;
+    ReceiverType worker = ReceiverType::WORKER;
     Time t_ = 1;
 
 };
