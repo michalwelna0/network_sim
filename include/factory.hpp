@@ -3,6 +3,12 @@
 #include "types.hpp"
 #include "nodes.hpp"
 
+enum class NodeColor{UNVISITED,VISITED,VERIFIED};
+class NoDefiniedReceivers : public std::logic_error{
+public:
+    NoDefiniedReceivers(): std::logic_error("No definied receivers") {}
+};
+
 template <class Node>
 class NodeCollection{
 public:
@@ -34,8 +40,6 @@ public:
 private:
     list_t list_;
 };
-
-
 
 
 class Factory{
