@@ -108,7 +108,7 @@ TEST(FactoryTest, RemoveWorkerOnlyOneReceiver) {
     ASSERT_TRUE(prefs.empty());
 }
 
-/*
+
 TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers) {
 
     Factory factory;
@@ -139,4 +139,3 @@ TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers) {
     ASSERT_NE(it, prefs.end());
     EXPECT_DOUBLE_EQ(it->second, 1.0 / 2.0);
 }
-*/

@@ -76,10 +76,10 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
         throw NoDefiniedReceivers();
     }
 
-    //bool does_sender_have_receiver_diff_than_him = false;
+    bool does_sender_have_receiver_diff_than_him = false;
     for(auto& receiver: sender->receiver_preferences_){
         if(receiver.first->get_receiver_type()==ReceiverType::STOREHOUSE){
-            //does_sender_have_receiver_diff_than_him = true;
+            does_sender_have_receiver_diff_than_him = true;
         }
         else if(receiver.first->get_receiver_type()==ReceiverType::WORKER){
             //konwersja typów
@@ -88,7 +88,7 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
             auto sendrecv_ptr = dynamic_cast<PackageSender*>(worker_ptr);
 
             if(worker_ptr==sender){continue;}
-            //does_sender_have_receiver_diff_than_him = true;
+            does_sender_have_receiver_diff_than_him = true;
 
             if(node_colors[sendrecv_ptr]==NodeColor::UNVISITED){
                 has_reachable_storehouse(sendrecv_ptr,node_colors);
@@ -98,7 +98,8 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
     }
 
     node_colors[sender] = NodeColor::VERIFIED;
-    if(has_reachable_storehouse(sender,node_colors)){
+
+    if(has_reachable_storehouse(sender,node_colors) && does_sender_have_receiver_diff_than_him){
         return true;
     }else{throw NoDefiniedReceivers();}
 

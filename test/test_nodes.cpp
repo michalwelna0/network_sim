@@ -451,6 +451,7 @@ TEST(PackageSenderTest, SendPackage) {
     // Upewnij się, że proces wysyłania zachodzi tylko wówczas, gdy w bufor jest pełny.
     sender.send_package();
 }
+
 /*
 //FIXME: odkomentować po wyjaśnieniu sytuacji z domyślnym generatorem prawdopodobieństwa
 TEST(ReceiverPreferencesChoosingTest, ChooseReceiver) {
@@ -473,4 +474,4 @@ TEST(ReceiverPreferencesChoosingTest, ChooseReceiver) {
         EXPECT_EQ(rp.choose_receiver(), &r1);
     }
 }
-*/
+ */
