@@ -7,7 +7,7 @@
 // DEBUG
 #include <iostream>
 
-/*
+
 TEST(FactoryTest, IsConsistentCorrect) {
     // R -> W -> S
 
@@ -65,7 +65,7 @@ TEST(FactoryTest, IsConsistentMissingLink2) {
 
     EXPECT_FALSE(factory.is_consistent());
 }
-*/
+
 
 TEST(FactoryTest, RemoveWorkerNoSuchReceiver) {
     //Próba usunięcia nieistniejącego odbiorcy - dopuszczalne.

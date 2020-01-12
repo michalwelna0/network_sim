@@ -66,7 +66,7 @@ public:
     NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const {return storehouses.cbegin();}
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const {return storehouses.cend();}
 
-    bool is_consistent() const;
+    bool is_consistent();
     void do_deliveries(Time t) {std::for_each(ramps.begin(),ramps.end(),[t](auto &buff){buff.deliver_goods(t);});}
     void do_package_passing() {std::for_each(ramps.begin(),ramps.end(),[](auto& buff){buff.send_package();});
         std::for_each(workers.begin(),workers.end(),[](auto& buff){buff.send_package();}); }

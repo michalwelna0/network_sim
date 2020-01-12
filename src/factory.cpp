@@ -72,14 +72,14 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
     }
     node_colors[sender] = NodeColor::VISITED;
 
-    if(sender == nullptr){
+    if(sender->receiver_preferences_.end() == sender->receiver_preferences_.begin()){
         throw NoDefiniedReceivers();
     }
 
-    bool does_sender_have_receiver_diff_than_him = false;
+    //bool does_sender_have_receiver_diff_than_him = false;
     for(auto& receiver: sender->receiver_preferences_){
         if(receiver.first->get_receiver_type()==ReceiverType::STOREHOUSE){
-            does_sender_have_receiver_diff_than_him = true;
+            //does_sender_have_receiver_diff_than_him = true;
         }
         else if(receiver.first->get_receiver_type()==ReceiverType::WORKER){
             //konwersja typów
@@ -88,7 +88,7 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
             auto sendrecv_ptr = dynamic_cast<PackageSender*>(worker_ptr);
 
             if(worker_ptr==sender){continue;}
-            does_sender_have_receiver_diff_than_him = true;
+            //does_sender_have_receiver_diff_than_him = true;
 
             if(node_colors[sendrecv_ptr]==NodeColor::UNVISITED){
                 has_reachable_storehouse(sendrecv_ptr,node_colors);
@@ -104,12 +104,19 @@ bool has_reachable_storehouse(const PackageSender* sender, std::map<const Packag
 
 }
 
-bool Factory::is_consistent() const {
+bool Factory::is_consistent() {
 
     std::map<const PackageSender*, NodeColor> color;
-    //obczajcie o chuj chodzi w tym pseudokodzie bo ja nie wiem
-    //std::for_each(ramps.cbegin(),ramps.cend(),[color](const auto elem){color[&elem]=NodeColor::UNVISITED;});
-    //std::for_each(workers.cbegin(),workers.cend(),[color](const auto elem){color[&elem]=NodeColor::UNVISITED;});
+    for(auto it = workers.cbegin(); it!=workers.cend(); it++){
+        const PackageSender* r = &(*it);
+        color[r] = NodeColor::UNVISITED;
+    }
+
+    for(auto it = ramps.cbegin(); it!=ramps.cend(); it++){
+        const PackageSender* r = &(*it);
+        color[r] = NodeColor::UNVISITED;
+    }
+
 
    try {
        for(const auto& ramp: ramps){
