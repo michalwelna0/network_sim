@@ -66,13 +66,11 @@ public:
     void remove_receiver(IPackageReceiver* r);
     IPackageReceiver* choose_receiver();
     const preferences_t& get_preferences() const {return preferences_;}
-    void set_preferences(preferences_t& p) {preferences_ = p;}
 
     const_iterator cbegin() const {return preferences_.cbegin();}
     const_iterator cend() const {return preferences_.cend();}
     const_iterator begin() const {return preferences_.begin();}
     const_iterator end() const {return preferences_.end();}
-
 
 private:
     preferences_t preferences_;

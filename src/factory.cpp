@@ -20,6 +20,7 @@ void Factory::remove_worker(ElementID id){
             if(elem_prefs.first == buff){
 
                 elem.receiver_preferences_.remove_receiver(elem_prefs.first);
+                break;
 
             }
 
@@ -28,12 +29,12 @@ void Factory::remove_worker(ElementID id){
     }
 
     for(auto& elem : ramps){
-
         for(auto& elem_prefs : elem.receiver_preferences_){
 
             if(elem_prefs.first == buff){
 
                 elem.receiver_preferences_.remove_receiver(elem_prefs.first);
+                break;
 
             }
 
@@ -56,7 +57,7 @@ void Factory::remove_storehouse(ElementID id){
             if(elem_prefs.first == buff){
 
                 elem.receiver_preferences_.remove_receiver(elem_prefs.first);
-
+                break;
             }
 
         }
